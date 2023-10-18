@@ -32,19 +32,31 @@ const getAll = (req, res) => {
 const getMessageByID = (req, res) => {
     const id = req.params.id;
 
-    res.json(
-        {
-            status: "success",
-            message: "getting message for id " + id,
-            data: {
-                message: {
-                    user: "Norm Scully",
-                    message: "sandwiches are good"
-                }
+    Message.findById(id)
+        .then((message) => {
+            if (!message) {
+                return res.status(404).json({
+                    status: "error",
+                    message: "Message not found",
+                });
             }
-        }
-    );
+
+            res.json({
+                status: "success",
+                message: `getting message for id ${id}`,
+                data: {
+                    message,
+                },
+            });
+        })
+        .catch((err) => {
+            res.status(500).json({
+                status: "error",
+                message: "Failed to retrieve message with this ID",
+            });
+        });
 };
+
 
 const postMessage = async (req, res) => {
     const { user, text } = req.body.message;
