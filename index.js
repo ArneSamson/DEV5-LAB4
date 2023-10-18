@@ -2,46 +2,14 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
+const messageController = require('./controllers/api/v1/messages.js');
+
 const cors = require('cors');
 app.use(cors());
 
-app.get('/', (req, res) => {
-    res.send('Welcome to my API!');
-});
+app.get('/', messageController.welcome);
 
-app.get('/api/v1/messages', (req, res) => {
-
-    const username = req.query.user;
-
-    if(username) {
-        res.json(
-            {
-                status: "success",
-                message: `getting messages for user ${username}`,
-            }
-        );
-    }
-
-
-    res.json(
-        {
-            status: "success",
-            message: "getting messages",
-            data: {
-                messages: [
-                    {
-                        user: "Norm Scully",
-                        message: "sandwiches are good"
-                    },
-                    {
-                        user: "Hitchcock",
-                        message: "Beaver trap"
-                    }
-                ]
-            }
-        }
-    );
-});
+app.get('/api/v1/messages', messageController.getAll);
 
 app.get('/api/v1/messages/:id', (req, res) => {
     const id = req.params.id;
