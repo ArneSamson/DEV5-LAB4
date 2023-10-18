@@ -47,13 +47,13 @@ app.get('/api/v1/messages/:id', (req, res) => {
     );
 });
 
-app.post('/api/v1/messages/:username', (req, res) => {
-    const username = req.params.username;
+app.post('/api/v1/messages', (req, res) => {
+    const user = req.query.user;
 
     res.json(
         {
             status: "success",
-            message: "posting a new message for user " + username,
+            message: `posting a new message for user ${user}`,
         }
     );
 });
