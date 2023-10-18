@@ -57,7 +57,6 @@ const getMessageByID = (req, res) => {
         });
 };
 
-
 const postMessage = async (req, res) => {
     const { user, text } = req.body.message;
 
@@ -85,14 +84,37 @@ const postMessage = async (req, res) => {
 
 const putMessage = (req, res) => {
     const id = req.params.id;
+    const { user, text } = req.body;
 
-    res.json(
-        {
-            status: "success",
-            message: `updating a message for id ${id}`,
-        }
-    );
+    Message.findByIdAndUpdate(
+        id,
+        { user, text },
+        { new: true } // To get the updated document as the result
+    )
+        .then((message) => {
+            if (!message) {
+                return res.status(404).json({
+                    status: "error",
+                    message: "Message not found",
+                });
+            }
+
+            res.json({
+                status: "success",
+                message: `updating message for id ${id}`,
+                data: {
+                    message,
+                },
+            });
+        })
+        .catch((err) => {
+            res.status(500).json({
+                status: "error",
+                message: "Failed to update message",
+            });
+        });
 };
+
 
 const deleteMessage = (req, res) => {
     const id = req.params.id;
