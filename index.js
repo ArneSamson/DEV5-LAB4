@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const port = 3000;
+app.use(express.json());
 
 const config = require('config');
 
@@ -10,6 +11,8 @@ const mongoose = require('mongoose');
 
 mongoose.connect(config.get('Database.conn'), {
     useNewUrlParser: true,
+    useUnifiedTopology: true,
+    dbName: config.get('Database.dbName'),
 });
 
 const cors = require('cors');
