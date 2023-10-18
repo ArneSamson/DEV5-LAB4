@@ -48,12 +48,23 @@ app.get('/api/v1/messages/:id', (req, res) => {
 });
 
 app.post('/api/v1/messages', (req, res) => {
-    const user = req.query.user;
+    const {user, text} = req.body.message;
 
     res.json(
         {
             status: "success",
-            message: `posting a new message for user ${user}`,
+            message: `POSTING a new message for user ${user}`,
+        }
+    );
+});
+
+app.put('/api/v1/messages/:id', (req, res) => {
+    const id = req.params.id;
+
+    res.json(
+        {
+            status: "success",
+            message: `updating a message for id ${id}`,
         }
     );
 });
