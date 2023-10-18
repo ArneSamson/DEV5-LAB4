@@ -1,3 +1,5 @@
+const Message = require('../../../models/messageModel.js');
+
 const welcome = (req, res) => {
     res.send('Welcome to my API!');
 };
@@ -5,34 +7,41 @@ const welcome = (req, res) => {
 const getAll = (req, res) => {
     const username = req.query.user;
 
-    if(username) {
-        res.json(
-            {
-                status: "success",
-                message: `getting messages for user ${username}`,
+    if (username) {
+        Message.find({ user: username }, (err, messages) => {
+            if (err) {
+                res.status(500).json({
+                    status: "error",
+                    message: "Failed to retrieve messages",
+                });
+            } else {
+                res.json({
+                    status: "success",
+                    message: `getting messages for user ${username}`,
+                    data: {
+                        messages,
+                    },
+                });
             }
-        );
-    }else{
-
-        res.json(
-            {
-                status: "success",
-                message: "getting messages",
-                data: {
-                    messages: [
-                        {
-                            user: "Norm Scully",
-                            message: "sandwiches are good"
-                        },
-                        {
-                            user: "Hitchcock",
-                            message: "Beaver trap"
-                        }
-                    ]
-                }
+        });
+    } else {
+        Message.find({}, (err, messages) => {
+            if (err) {
+                res.status(500).json({
+                    status: "error",
+                    message: "Failed to retrieve messages",
+                });
+            } else {
+                res.json({
+                    status: "success",
+                    message: "getting messages",
+                    data: {
+                        messages,
+                    },
+                });
             }
-            );
-        };
+        });
+    }
 };
 
 const getMessageByID = (req, res) => {
@@ -54,11 +63,31 @@ const getMessageByID = (req, res) => {
 
 const postMessage = (req, res) => {
     const { user, text } = req.body.message;
-  
-    res.json({
-      message: `POSTING a new message for user ${user}`,
+
+    const newMessage = new Message({
+        user,
+        text,
+    });
+
+    newMessage.save((err, message) => {
+        if (err) {
+            res.status(500).json({
+                status: "error",
+                message: "Failed to post a new message",
+            });
+        } else {
+            res.json({
+                status: "success",
+                message: `POSTING a new message for user ${user}`,
+                data: {
+                    message,
+                },
+            });
+        }
     });
 };
+
+
 
 const putMessage = (req, res) => {
     const id = req.params.id;
