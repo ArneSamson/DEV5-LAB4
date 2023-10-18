@@ -2,7 +2,15 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
+const config = require('config');
+
 const messageController = require('./controllers/api/v1/messages.js');
+
+const mongoose = require('mongoose');
+
+mongoose.connect(config.get('Database.conn'), {
+    useNewUrlParser: true,
+});
 
 const cors = require('cors');
 app.use(cors());
