@@ -54,13 +54,6 @@ const postMessage = async (req, res) => {
         text,
     });
 
-    // res.json(
-    //     {
-    //         user: user,
-    //         text: text,
-    //     }
-    // );
-
     try {
         const message = await newMessage.save();
         res.json({
