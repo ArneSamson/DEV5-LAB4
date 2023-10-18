@@ -7,41 +7,26 @@ const welcome = (req, res) => {
 const getAll = (req, res) => {
     const username = req.query.user;
 
-    if (username) {
-        Message.find({ user: username }, (err, messages) => {
-            if (err) {
-                res.status(500).json({
-                    status: "error",
-                    message: "Failed to retrieve messages",
-                });
-            } else {
-                res.json({
-                    status: "success",
-                    message: `getting messages for user ${username}`,
-                    data: {
-                        messages,
-                    },
-                });
-            }
+    const query = username ? { user: username } : {};
+
+    Message.find(query)
+        .then((messages) => {
+            res.json({
+                status: "success",
+                message: username
+                    ? `getting messages for user ${username}`
+                    : "getting messages",
+                data: {
+                    messages,
+                },
+            });
+        })
+        .catch((err) => {
+            res.status(500).json({
+                status: "error",
+                message: "Failed to retrieve messages",
+            });
         });
-    } else {
-        Message.find({}, (err, messages) => {
-            if (err) {
-                res.status(500).json({
-                    status: "error",
-                    message: "Failed to retrieve messages",
-                });
-            } else {
-                res.json({
-                    status: "success",
-                    message: "getting messages",
-                    data: {
-                        messages,
-                    },
-                });
-            }
-        });
-    }
 };
 
 const getMessageByID = (req, res) => {
@@ -61,33 +46,30 @@ const getMessageByID = (req, res) => {
     );
 };
 
-const postMessage = (req, res) => {
-    const { user, text } = req.body.message;
+const postMessage = async (req, res) => {
+    const { user, text } = req.body;
 
     const newMessage = new Message({
         user,
         text,
     });
 
-    newMessage.save((err, message) => {
-        if (err) {
-            res.status(500).json({
-                status: "error",
-                message: "Failed to post a new message",
-            });
-        } else {
-            res.json({
-                status: "success",
-                message: `POSTING a new message for user ${user}`,
-                data: {
-                    message,
-                },
-            });
-        }
-    });
+    try {
+        const message = await newMessage.save();
+        res.json({
+            status: "success",
+            message: `POSTING a new message for user ${user}`,
+            data: {
+                message,
+            },
+        });
+    } catch (err) {
+        res.status(500).json({
+            status: "error",
+            message: "Failed to save message",
+        });
+    }
 };
-
-
 
 const putMessage = (req, res) => {
     const id = req.params.id;
