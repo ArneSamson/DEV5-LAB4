@@ -11,52 +11,13 @@ app.get('/', messageController.welcome);
 
 app.get('/api/v1/messages', messageController.getAll);
 
-app.get('/api/v1/messages/:id', (req, res) => {
-    const id = req.params.id;
+app.get('/api/v1/messages/:id', messageController.getMessageByID);
 
-    res.json(
-        {
-            status: "success",
-            message: "getting message for id " + id,
-            data: {
-                message: {
-                    user: "Norm Scully",
-                    message: "sandwiches are good"
-                }
-            }
-        }
-    );
-});
+app.post("/api/v1/messages", messageController.postMessage);
 
-app.post("/api/v1/messages", (req, res) => {
-    const { user, text } = req.body.message;
-  
-    res.json({
-      message: `POSTING a new message for user ${user}`,
-    });
-  });
+app.put('/api/v1/messages/:id', messageController.putMessage);
 
-app.put('/api/v1/messages/:id', (req, res) => {
-    const id = req.params.id;
-
-    res.json(
-        {
-            status: "success",
-            message: `updating a message for id ${id}`,
-        }
-    );
-});
-
-app.delete('/api/v1/messages/:id', (req, res) => {
-    const id = req.params.id;
-
-    res.json(
-        {
-            status: "success",
-            message: `DELETING a message with id ${id}`,
-        }
-    );
-});
+app.delete('/api/v1/messages/:id', messageController.deleteMessage);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
