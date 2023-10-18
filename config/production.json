@@ -1,0 +1,9 @@
+{
+    "Database" : {
+        "conn" : "mongodb+srv://arnesamson:rd9V7b6m8LWLJvwO@cluster0.imejyuq.mongodb.net/?retryWrites=true&w=majority",
+        "dbName" : "LABO4"
+    },
+    "jwt" :{
+        "secret" : "secret"
+    }
+}
