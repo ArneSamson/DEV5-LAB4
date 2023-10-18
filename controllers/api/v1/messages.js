@@ -47,12 +47,19 @@ const getMessageByID = (req, res) => {
 };
 
 const postMessage = async (req, res) => {
-    const { user, text } = req.body;
+    const { user, text } = req.body.message;
 
     const newMessage = new Message({
         user,
         text,
     });
+
+    // res.json(
+    //     {
+    //         user: user,
+    //         text: text,
+    //     }
+    // );
 
     try {
         const message = await newMessage.save();
