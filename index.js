@@ -18,7 +18,7 @@ mongoose.connect(config.get('Database.conn'), {
 const cors = require('cors');
 app.use(cors());
 
-app.get('/', messageController.welcome);
+app.get('/api/v1', messageController.welcome);
 
 app.get('/api/v1/messages', messageController.getAll);
 
