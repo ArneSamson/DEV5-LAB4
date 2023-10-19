@@ -110,7 +110,7 @@ const putMessage = (req, res) => {
         .catch((err) => {
             res.status(500).json({
                 status: "error",
-                message: "Failed to update message",
+                message: "Failed to update message with this id",
             });
         });
 };
@@ -119,14 +119,30 @@ const putMessage = (req, res) => {
 const deleteMessage = (req, res) => {
     const id = req.params.id;
 
-    res.json(
-        {
-            status: "success",
-            message: `DELETING a message with id ${id}`,
-        }
-    );
-};
+    Message.findByIdAndRemove(id)
+        .then((message) => {
+            if (!message) {
+                return res.status(404).json({
+                    status: "error",
+                    message: "Message not found",
+                });
+            }
 
+            res.json({
+                status: "success",
+                message: `deleting message for id ${id}`,
+                data: {
+                    message,
+                },
+            });
+        })
+        .catch((err) => {
+            res.status(500).json({
+                status: "error",
+                message: "Failed to delete message with this id",
+            });
+        });
+};
 
 module.exports.welcome = welcome;
 module.exports.getAll = getAll;
