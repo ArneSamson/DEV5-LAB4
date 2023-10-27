@@ -1,13 +1,21 @@
+///create mongose schema
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const messageSchema = new mongoose.Schema(
-  {
-    user: String,
-    text: String,
-  },
-  {
-    collection: 'messages',
-  }
+const MessageSchema = new Schema({
+    message: {
+        user:{
+            type: String,
+            required: true,
+        },
+        text: {
+            type: String,
+            required: true,
+        }
+    },
+}, 
 );
 
-module.exports = mongoose.model('Message', messageSchema);
+const Message = mongoose.model('Message', MessageSchema);
+
+module.exports = Message;

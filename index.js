@@ -1,34 +1,24 @@
+require('dotenv').config();
 const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+// const config = require('config');
+
 const app = express();
 const port = 3000;
+
+
 app.use(express.json());
-
-const config = require('config');
-
-const messageController = require('./controllers/api/v1/messages.js');
-
-const mongoose = require('mongoose');
-
-mongoose.connect(config.get('Database.conn'), {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    dbName: config.get('Database.dbName'),
-});
-
-const cors = require('cors');
 app.use(cors());
 
-app.get('/api/v1', messageController.welcome);
+const messagesRouter = require('./router/api/v1/message.js');
 
-app.get('/api/v1/messages', messageController.getAll);
+app.use('/api/v1/messages', messagesRouter);
 
-app.get('/api/v1/messages/:id', messageController.getMessageByID);
-
-app.post("/api/v1/messages", messageController.postMessage);
-
-app.put('/api/v1/messages/:id', messageController.putMessage);
-
-app.delete('/api/v1/messages/:id', messageController.deleteMessage);
+mongoose.connect(process.env.MONGODB, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
