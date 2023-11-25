@@ -8,4 +8,8 @@ router.get("/", scoreController.index);
 
 router.post("/", scoreController.create);
 
+router.put("/:team", scoreController.update);
+
+
+
 module.exports = router;
